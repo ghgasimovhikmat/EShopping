@@ -2,7 +2,7 @@ using Catalog.Core.Entities;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
-namespace Catalog.Infrastructure.Data.SeedData;
+namespace Catalog.Infrastructure.Data;
 
 public class CatalogContext : ICatalogContext
 {
