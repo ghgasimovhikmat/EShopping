@@ -1,6 +1,8 @@
 using Catalog.Core.Entities;
 using Catalog.Core.Repositories;
+using Catalog.Core.Specs;
 using Catalog.Infrastructure.Data;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Catalog.Infrastructure.Repositories;
@@ -12,8 +14,31 @@ public class ProductRepository:IProductRepository,ITypesRepository,IBrandReposit
     {
         _context = context;
     }
-    public async Task<IEnumerable<Product>> GetProducts()
+    public async Task<Pagination<Product>> GetProducts(CatalogSpecParams catalogSpecParams)
     {
+        var builder = Builders<Product>.Filter;
+        var filter = builder.Empty;
+        if (!string.IsNullOrEmpty(catalogSpecParams.Search))
+        {
+            var searchFilter = builder.Regex(x => x.Name, new BsonRegularExpression(catalogSpecParams.Search));
+            filter &= searchFilter;
+        }
+
+        if (!string.IsNullOrEmpty(catalogSpecParams.BrandId))
+        {
+            var brandFilter = builder.Regex(x => x.Brands.Id, new BsonRegularExpression(catalogSpecParams.BrandId));
+            filter &= brandFilter;
+        }
+        if (!string.IsNullOrEmpty(catalogSpecParams.TypeId))
+        {
+            var typesFilter = builder.Regex(x => x.Types.Id, new BsonRegularExpression(catalogSpecParams.TypeId));
+            filter &= typesFilter;
+        }
+
+        if (!string.IsNullOrEmpty(catalogSpecParams.Sort))
+        {
+            return new Pagination<Product>()
+        }
         return await _context.Products
             .Find(p => true)
             .ToListAsync();

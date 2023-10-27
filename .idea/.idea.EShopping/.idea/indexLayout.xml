@@ -2,7 +2,13 @@
 <project version="4">
   <component name="UserContentModel">
     <attachedFolders />
-    <explicitIncludes />
+    <explicitIncludes>
+      <Path>.gitignore</Path>
+      <Path>docker-compose</Path>
+      <Path>docker-compose.dcproj</Path>
+      <Path>docker-compose.override.yml</Path>
+      <Path>docker-compose.yml</Path>
+    </explicitIncludes>
     <explicitExcludes />
   </component>
 </project>

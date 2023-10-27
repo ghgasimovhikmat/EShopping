@@ -4,6 +4,7 @@ using Catalog.Application.Commands;
 using Catalog.Core.Repositories;
 using Catalog.Infrastructure.Data;
 using Catalog.Infrastructure.Repositories;
+using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -29,10 +30,17 @@ public class Startup
             .AddMongoDb(Configuration["DatabaseSettings:ConnectionString"], "Catalog  Mongo Db Health Check",
                 HealthStatus.Degraded);
         services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog.API", Version = "v1"}); });
-        
+       
         //DI
         services.AddAutoMapper(typeof(Startup));
-        services.AddMediatR(typeof(CreateProductCommand).GetTypeInfo().Assembly);
+        //services.AddMediatR(typeof(CreateProductCommand).GetTypeInfo().Assembly);
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblies(typeof(Startup).Assembly, typeof(CreateProductCommand).Assembly);
+        });
+       /* services.AddMediatR(cfg => {
+            cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly);
+        });*/
         services.AddScoped<ICatalogContext, CatalogContext>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ITypesRepository, ProductRepository>();
@@ -45,6 +53,7 @@ public class Startup
             app.UseDeveloperExceptionPage();  
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.API v1"));
+            
         }
 
         app.UseHttpsRedirection();
@@ -59,7 +68,7 @@ public class Startup
             endpoints.MapHealthChecks("/health", new HealthCheckOptions()
             {
                 Predicate = _ => true,
-              //  ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
         });
     }
