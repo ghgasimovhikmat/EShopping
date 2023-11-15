@@ -7,7 +7,7 @@ using Catalog.Infrastructure.Repositories;
 using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 
@@ -26,6 +26,7 @@ public class Startup
     {
         services.AddControllers();
         services.AddApiVersioning();
+       
         services.AddHealthChecks()
             .AddMongoDb(Configuration["DatabaseSettings:ConnectionString"], "Catalog  Mongo Db Health Check",
                 HealthStatus.Degraded);
@@ -38,9 +39,7 @@ public class Startup
         {
             cfg.RegisterServicesFromAssemblies(typeof(Startup).Assembly, typeof(CreateProductCommand).Assembly);
         });
-       /* services.AddMediatR(cfg => {
-            cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly);
-        });*/
+      
         services.AddScoped<ICatalogContext, CatalogContext>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ITypesRepository, ProductRepository>();
