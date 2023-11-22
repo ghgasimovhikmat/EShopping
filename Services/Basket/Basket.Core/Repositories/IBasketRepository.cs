@@ -1,3 +1,5 @@
+using Basket.Core.Entities;
+
 namespace Basket.Entity.Repositories;
 
 public interface IBasketRepository

@@ -12,3 +12,4 @@ public class GetBasketByUserNameQuery:IRequest<ShoppingCartResponse>
         UserName = userName;
     }
 }
+

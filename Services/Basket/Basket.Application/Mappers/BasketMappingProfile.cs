@@ -1,5 +1,6 @@
 using AutoMapper;
 using Basket.Application.Responses;
+using Basket.Core.Entities;
 using Basket.Entity;
 
 namespace Basket.Application.Mappers;

@@ -1,9 +1,11 @@
-namespace Basket.Entity;
+using Basket.Entity;
+
+namespace Basket.Core.Entities;
 
 public class ShoppingCart
 {
     public string UserName { get; set; }
-    public List<ShoppingCartItem> Items = new List<ShoppingCartItem>();
+    public List<ShoppingCartItem> Items  { get; set; }= new List<ShoppingCartItem>();
     
     public ShoppingCart()
     {

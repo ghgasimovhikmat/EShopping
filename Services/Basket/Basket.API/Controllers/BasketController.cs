@@ -3,10 +3,9 @@ using Basket.Application.Commands;
 using Basket.Application.Queries;
 using Basket.Application.Responses;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Basket.API;
+namespace Basket.API.Controllers;
 
 public class BasketController : ApiController
 {
@@ -43,7 +42,7 @@ public class BasketController : ApiController
     {
         var query = new DeleteBasketByUserNameQuery(userName);
         
-        return Ok( _mediator.Send(query));
+        return Ok(  _mediator.Send(query));
        
     }
 }

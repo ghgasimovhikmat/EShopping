@@ -4,7 +4,6 @@ using Basket.Application.Handlers;
 using Basket.Entity.Repositories;
 using Basket.Infrastructure.Repositories;
 using HealthChecks.UI.Client;
-using MediatR;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -25,6 +24,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        //services.AddApiVersioning();
         services.AddApiVersioning(options =>
         {
             options.AssumeDefaultVersionWhenUnspecified = true;
@@ -37,7 +37,8 @@ public class Startup
             //         new MediaTypeApiVersionReader("ver")
             //     );
         });
-        services.AddVersionedApiExplorer(options =>
+        
+       services.AddVersionedApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
@@ -45,7 +46,8 @@ public class Startup
           
         });
        
-        services.AddHealthChecks()
+       services.AddApiVersioning();
+       services.AddHealthChecks()
             .AddRedis(Configuration["CacheSettings:ConnectionString"], "Redis Health", HealthStatus.Degraded);
        
      
@@ -56,6 +58,7 @@ public class Startup
         {
             cfg.RegisterServicesFromAssemblies(typeof(Startup).Assembly, typeof(CreateShoppingCartCommandHandler).Assembly);
         });
+        
         services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Basket.API", Version = "v1"}); });
         services.AddStackExchangeRedisCache(options =>
         {
@@ -73,16 +76,15 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();  
             app.UseSwagger();
-            app.UseSwaggerUI(options => {
-
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.API v1");
-            });
+          
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.API v1"));
         }
         
         app.UseHttpsRedirection();
         app.UseRouting();
-        app.UseCors("CorsPolicy");
+     //   app.UseCors("CorsPolicy");
         app.UseAuthentication();
+        app.UseStaticFiles();
         app.UseAuthorization();
         app.UseEndpoints(endpoints =>
         {
